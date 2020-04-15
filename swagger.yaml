@@ -4,7 +4,7 @@ info:
   title: Sample API
 
 paths:
-  /api/regist:
+  /api/register:
     post:
       consumes:
         - application/x-www-form-urlencoded
@@ -14,22 +14,48 @@ paths:
           description: クエリパラメータ
           type: integer
           required: true
-        - name: hoge_name
-          in: formData
-          description: 名前
-          required: true
-          type: string
-        - name: age
-          in: formData
-          description: 年齢
-          required: true
-          type: string
-        - name: comment
-          in: formData
-          description: コメント
-          type: string
-          required: true
-          maxLength: 1000
+        - in: body
+          name: user
+          description: The user to create.
+          schema:
+            $ref: '#/definitions/RegisterRequestBody'
       responses:
         200:
           description: ok
+  /hello:
+    get:
+      produces:
+        - application/json
+      parameters:
+        - name: name
+          required: false
+          type: string
+          in: query
+          description: defaults to World if not given
+      operationId: getGreeting
+      responses:
+        200:
+          description: returns a greeting
+          schema:
+            $ref: "#/definitions/HelloResponse"
+
+definitions:
+  RegisterRequestBody:
+    type: object
+    description: オブジェクトを別に定義してみるサンプル1
+    required:
+      - name
+    properties:
+      name:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
+  HelloResponse: # テンプレート名
+    type: "object"
+    description: オブジェクトを別に定義してみるサンプル
+    properties:
+      name:
+        type: "string"
+        example: "john due"

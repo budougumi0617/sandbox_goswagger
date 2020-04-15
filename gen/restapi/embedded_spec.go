@@ -24,7 +24,7 @@ func init() {
     "version": "0.0.0"
   },
   "paths": {
-    "/api/regist": {
+    "/api/register": {
       "post": {
         "consumes": [
           "application/x-www-form-urlencoded"
@@ -38,32 +38,72 @@ func init() {
             "required": true
           },
           {
-            "type": "string",
-            "description": "名前",
-            "name": "hoge_name",
-            "in": "formData",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "年齢",
-            "name": "age",
-            "in": "formData",
-            "required": true
-          },
-          {
-            "maxLength": 1000,
-            "type": "string",
-            "description": "コメント",
-            "name": "comment",
-            "in": "formData",
-            "required": true
+            "description": "The user to create.",
+            "name": "user",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/RegisterRequestBody"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "ok"
           }
+        }
+      }
+    },
+    "/hello": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "operationId": "getGreeting",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "defaults to World if not given",
+            "name": "name",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "returns a greeting",
+            "schema": {
+              "$ref": "#/definitions/HelloResponse"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "HelloResponse": {
+      "description": "オブジェクトを別に定義してみるサンプル",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "john due"
+        }
+      }
+    },
+    "RegisterRequestBody": {
+      "description": "オブジェクトを別に定義してみるサンプル1",
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
         }
       }
     }
@@ -76,7 +116,7 @@ func init() {
     "version": "0.0.0"
   },
   "paths": {
-    "/api/regist": {
+    "/api/register": {
       "post": {
         "consumes": [
           "application/x-www-form-urlencoded"
@@ -90,32 +130,72 @@ func init() {
             "required": true
           },
           {
-            "type": "string",
-            "description": "名前",
-            "name": "hoge_name",
-            "in": "formData",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "年齢",
-            "name": "age",
-            "in": "formData",
-            "required": true
-          },
-          {
-            "maxLength": 1000,
-            "type": "string",
-            "description": "コメント",
-            "name": "comment",
-            "in": "formData",
-            "required": true
+            "description": "The user to create.",
+            "name": "user",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/RegisterRequestBody"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "ok"
           }
+        }
+      }
+    },
+    "/hello": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "operationId": "getGreeting",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "defaults to World if not given",
+            "name": "name",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "returns a greeting",
+            "schema": {
+              "$ref": "#/definitions/HelloResponse"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "HelloResponse": {
+      "description": "オブジェクトを別に定義してみるサンプル",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "john due"
+        }
+      }
+    },
+    "RegisterRequestBody": {
+      "description": "オブジェクトを別に定義してみるサンプル1",
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
         }
       }
     }

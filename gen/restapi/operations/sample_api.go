@@ -41,8 +41,11 @@ func NewSampleAPI(spec *loads.Document) *SampleAPI {
 
 		JSONProducer: runtime.JSONProducer(),
 
-		PostAPIRegistHandler: PostAPIRegistHandlerFunc(func(params PostAPIRegistParams) middleware.Responder {
-			return middleware.NotImplemented("operation PostAPIRegist has not yet been implemented")
+		PostAPIRegisterHandler: PostAPIRegisterHandlerFunc(func(params PostAPIRegisterParams) middleware.Responder {
+			return middleware.NotImplemented("operation PostAPIRegister has not yet been implemented")
+		}),
+		GetGreetingHandler: GetGreetingHandlerFunc(func(params GetGreetingParams) middleware.Responder {
+			return middleware.NotImplemented("operation GetGreeting has not yet been implemented")
 		}),
 	}
 }
@@ -77,8 +80,10 @@ type SampleAPI struct {
 	//   - application/json
 	JSONProducer runtime.Producer
 
-	// PostAPIRegistHandler sets the operation handler for the post API regist operation
-	PostAPIRegistHandler PostAPIRegistHandler
+	// PostAPIRegisterHandler sets the operation handler for the post API register operation
+	PostAPIRegisterHandler PostAPIRegisterHandler
+	// GetGreetingHandler sets the operation handler for the get greeting operation
+	GetGreetingHandler GetGreetingHandler
 	// ServeError is called when an error is received, there is a default handler
 	// but you can set your own with this
 	ServeError func(http.ResponseWriter, *http.Request, error)
@@ -145,8 +150,11 @@ func (o *SampleAPI) Validate() error {
 		unregistered = append(unregistered, "JSONProducer")
 	}
 
-	if o.PostAPIRegistHandler == nil {
-		unregistered = append(unregistered, "PostAPIRegistHandler")
+	if o.PostAPIRegisterHandler == nil {
+		unregistered = append(unregistered, "PostAPIRegisterHandler")
+	}
+	if o.GetGreetingHandler == nil {
+		unregistered = append(unregistered, "GetGreetingHandler")
 	}
 
 	if len(unregistered) > 0 {
@@ -239,7 +247,11 @@ func (o *SampleAPI) initHandlerCache() {
 	if o.handlers["POST"] == nil {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
-	o.handlers["POST"]["/api/regist"] = NewPostAPIRegist(o.context, o.PostAPIRegistHandler)
+	o.handlers["POST"]["/api/register"] = NewPostAPIRegister(o.context, o.PostAPIRegisterHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/hello"] = NewGetGreeting(o.context, o.GetGreetingHandler)
 }
 
 // Serve creates a http handler to serve the API over HTTP

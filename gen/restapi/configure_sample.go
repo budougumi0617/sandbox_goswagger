@@ -38,6 +38,11 @@ func configureAPI(api *operations.SampleAPI) http.Handler {
 			return middleware.NotImplemented("operation operations.PostAPIRegist has not yet been implemented")
 		})
 	}
+	if api.GetGreetingHandler == nil {
+		api.GetGreetingHandler = operations.GetGreetingHandlerFunc(func(params operations.GetGreetingParams) middleware.Responder {
+			return middleware.NotImplemented("operation operations.GetGreeting has not yet been implemented")
+		})
+	}
 
 	api.PreServerShutdown = func() {}
 
