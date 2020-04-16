@@ -63,6 +63,38 @@ func TestServer_Start(t *testing.T) {
 				status: http.StatusOK,
 			},
 		},
+		{
+			name: "PostAPIRegister_NotEnoughQuery",
+			req: req{
+				method: "POST",
+				path:   "/api/register",
+				headers: map[string]string{
+					"Content-Type": "application/json",
+				},
+				query: "",
+				body:  `{"name":"budougumi", "="lastName":"taro"}`,
+			},
+			want: resp{
+				status: http.StatusUnprocessableEntity,
+				body:   `{"code":602,"message":"hoge_id in query is required"}`,
+			},
+		},
+		{
+			name: "PostAPIRegister_NotEnoughBody",
+			req: req{
+				method: "POST",
+				path:   "/api/register",
+				headers: map[string]string{
+					"Content-Type": "application/json",
+				},
+				query: "?hoge_id=20",
+				body:  `{"lastName":"taro"}`,
+			},
+			want: resp{
+				status: http.StatusUnprocessableEntity,
+				body:   `{"code":602,"message":"name in body is required"}`,
+			},
+		},
 	}
 	for _, tt := range tests {
 		tt := tt
@@ -94,8 +126,7 @@ func TestServer_Start(t *testing.T) {
 			if err != nil {
 				t.Fatalf("create request failed %v", err)
 			}
-			cli := &http.Client{}
-			got, err := cli.Do(req)
+			got, err := http.DefaultClient.Do(req)
 			if err != nil {
 				t.Fatalf("http.Get failed: %v", err)
 			}
