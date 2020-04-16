@@ -30,7 +30,6 @@ func TestServer_Start(t *testing.T) {
 				path:    "/hello",
 				headers: map[string]string{},
 				query:   "?name=budougumi0617",
-				body:    "",
 			},
 			want: resp{
 				status: http.StatusOK,
@@ -119,12 +118,11 @@ func TestServer_Start(t *testing.T) {
 			}()
 			url := "http://" + l.Addr().String() + tt.req.path + tt.req.query
 			req, err := http.NewRequest(tt.req.method, url, strings.NewReader(tt.req.body))
-			for k, v := range tt.req.headers {
-				req.Header.Add(k, v)
-			}
-
 			if err != nil {
 				t.Fatalf("create request failed %v", err)
+			}
+			for k, v := range tt.req.headers {
+				req.Header.Add(k, v)
 			}
 			got, err := http.DefaultClient.Do(req)
 			if err != nil {
