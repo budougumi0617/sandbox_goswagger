@@ -15,7 +15,7 @@ import (
 	"github.com/go-openapi/swag"
 	"github.com/go-openapi/validate"
 
-	"github.com/budougumi0617/sandbox-goswagger/gen/models"
+	"github.com/budougumi0617/sandbox_goswagger/gen/models"
 )
 
 // NewPostAPIRegisterParams creates a new PostAPIRegisterParams object

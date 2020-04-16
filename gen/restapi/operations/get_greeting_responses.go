@@ -10,7 +10,7 @@ import (
 
 	"github.com/go-openapi/runtime"
 
-	"github.com/budougumi0617/sandbox-goswagger/gen/models"
+	"github.com/budougumi0617/sandbox_goswagger/gen/models"
 )
 
 // GetGreetingOKCode is the HTTP code returned for type GetGreetingOK

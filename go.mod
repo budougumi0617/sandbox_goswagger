@@ -1,4 +1,4 @@
-module github.com/budougumi0617/sandbox-goswagger
+module github.com/budougumi0617/sandbox_goswagger
 
 go 1.14
 

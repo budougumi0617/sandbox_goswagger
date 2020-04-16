@@ -1,4 +1,4 @@
-package sandbox_goswagger
+package server
 
 import (
 	"context"
