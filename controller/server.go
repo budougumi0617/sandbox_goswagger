@@ -3,9 +3,14 @@ package controller
 import (
 	"context"
 	"fmt"
+	"log"
 	"net"
 	"net/http"
 	"time"
+
+	"github.com/budougumi0617/sandbox_goswagger/gen/restapi"
+	"github.com/budougumi0617/sandbox_goswagger/gen/restapi/operations"
+	"github.com/go-openapi/loads"
 )
 
 // Server is graceful start server.
@@ -25,12 +30,18 @@ func (s *Server) Shutdown(ctx context.Context) error {
 }
 
 // NewServer returns Server.
-func NewServer(l net.Listener, mux http.Handler) *Server {
+func NewServer(l net.Listener) *Server {
+	swaggerSpec, err := loads.Embedded(restapi.SwaggerJSON, restapi.FlatSwaggerJSON)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	h := ConfigureAPI(operations.NewSampleAPI(swaggerSpec))
 	// TODO: Functional Option Patternを使いたい。
 	return &Server{
 		Listener: l,
 		Server: &http.Server{
-			Handler:      mux,
+			Handler:      h,
 			ReadTimeout:  5 * time.Second,
 			WriteTimeout: 10 * time.Second,
 			IdleTimeout:  120 * time.Second,
