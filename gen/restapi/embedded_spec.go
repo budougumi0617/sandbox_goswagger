@@ -49,6 +49,9 @@ func init() {
         "responses": {
           "200": {
             "description": "ok"
+          },
+          "404": {
+            "description": "Data Not Found"
           }
         }
       }
@@ -141,6 +144,9 @@ func init() {
         "responses": {
           "200": {
             "description": "ok"
+          },
+          "404": {
+            "description": "Data Not Found"
           }
         }
       }

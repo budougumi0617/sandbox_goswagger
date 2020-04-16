@@ -12,7 +12,7 @@ import (
 	"github.com/go-openapi/runtime/middleware"
 )
 
-func configureAPI(api *operations.SampleAPI) http.Handler {
+func ConfigureAPI(api *operations.SampleAPI) http.Handler {
 	// configure the api here
 	api.ServeError = errors.ServeError
 

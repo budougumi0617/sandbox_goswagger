@@ -34,3 +34,27 @@ func (o *PostAPIRegisterOK) WriteResponse(rw http.ResponseWriter, producer runti
 
 	rw.WriteHeader(200)
 }
+
+// PostAPIRegisterNotFoundCode is the HTTP code returned for type PostAPIRegisterNotFound
+const PostAPIRegisterNotFoundCode int = 404
+
+/*PostAPIRegisterNotFound Data Not Found
+
+swagger:response postApiRegisterNotFound
+*/
+type PostAPIRegisterNotFound struct {
+}
+
+// NewPostAPIRegisterNotFound creates PostAPIRegisterNotFound with default headers values
+func NewPostAPIRegisterNotFound() *PostAPIRegisterNotFound {
+
+	return &PostAPIRegisterNotFound{}
+}
+
+// WriteResponse to the client
+func (o *PostAPIRegisterNotFound) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.Header().Del(runtime.HeaderContentType) //Remove Content-Type on empty responses
+
+	rw.WriteHeader(404)
+}

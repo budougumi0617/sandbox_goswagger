@@ -22,6 +22,8 @@ paths:
       responses:
         200:
           description: ok
+        404:
+          description: Data Not Found
   /hello:
     get:
       produces:
