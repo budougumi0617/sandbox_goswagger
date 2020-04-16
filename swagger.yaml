@@ -7,7 +7,7 @@ paths:
   /api/register:
     post:
       consumes:
-        - application/x-www-form-urlencoded
+        - application/json
       parameters:
         - name: hoge_id
           in: query

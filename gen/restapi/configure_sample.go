@@ -29,7 +29,7 @@ func configureAPI(api *operations.SampleAPI) http.Handler {
 	// Example:
 	// api.Logger = log.Printf
 
-	api.UrlformConsumer = runtime.DiscardConsumer
+	api.JSONConsumer = runtime.JSONConsumer()
 
 	api.JSONProducer = runtime.JSONProducer()
 

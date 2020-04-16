@@ -37,7 +37,7 @@ func NewSampleAPI(spec *loads.Document) *SampleAPI {
 		APIKeyAuthenticator: security.APIKeyAuth,
 		BearerAuthenticator: security.BearerAuth,
 
-		UrlformConsumer: runtime.DiscardConsumer,
+		JSONConsumer: runtime.JSONConsumer(),
 
 		JSONProducer: runtime.JSONProducer(),
 
@@ -72,9 +72,9 @@ type SampleAPI struct {
 	// It has a default implementation in the security package, however you can replace it for your particular usage.
 	BearerAuthenticator func(string, security.ScopedTokenAuthentication) runtime.Authenticator
 
-	// UrlformConsumer registers a consumer for the following mime types:
-	//   - application/x-www-form-urlencoded
-	UrlformConsumer runtime.Consumer
+	// JSONConsumer registers a consumer for the following mime types:
+	//   - application/json
+	JSONConsumer runtime.Consumer
 
 	// JSONProducer registers a producer for the following mime types:
 	//   - application/json
@@ -142,8 +142,8 @@ func (o *SampleAPI) RegisterFormat(name string, format strfmt.Format, validator 
 func (o *SampleAPI) Validate() error {
 	var unregistered []string
 
-	if o.UrlformConsumer == nil {
-		unregistered = append(unregistered, "UrlformConsumer")
+	if o.JSONConsumer == nil {
+		unregistered = append(unregistered, "JSONConsumer")
 	}
 
 	if o.JSONProducer == nil {
@@ -185,8 +185,8 @@ func (o *SampleAPI) ConsumersFor(mediaTypes []string) map[string]runtime.Consume
 	result := make(map[string]runtime.Consumer, len(mediaTypes))
 	for _, mt := range mediaTypes {
 		switch mt {
-		case "application/x-www-form-urlencoded":
-			result["application/x-www-form-urlencoded"] = o.UrlformConsumer
+		case "application/json":
+			result["application/json"] = o.JSONConsumer
 		}
 
 		if c, ok := o.customConsumers[mt]; ok {

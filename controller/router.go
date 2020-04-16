@@ -9,7 +9,6 @@ import (
 	"github.com/budougumi0617/sandbox_goswagger/gen/restapi/operations"
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
-	"github.com/go-openapi/runtime/middleware"
 )
 
 func ConfigureAPI(api *operations.SampleAPI) http.Handler {
@@ -22,23 +21,15 @@ func ConfigureAPI(api *operations.SampleAPI) http.Handler {
 	// Example:
 	// api.Logger = log.Printf
 
-	api.UrlformConsumer = runtime.DiscardConsumer
-
+	// TODO: この辺のイジり方はまだわかっていない
+	api.JSONConsumer = runtime.JSONConsumer()
 	api.JSONProducer = runtime.JSONProducer()
 
-	if api.PostAPIRegisterHandler == nil {
-		api.PostAPIRegisterHandler = operations.PostAPIRegisterHandlerFunc(func(params operations.PostAPIRegisterParams) middleware.Responder {
-			return middleware.NotImplemented("operation operations.PostAPIRegister has not yet been implemented")
-		})
-	}
-	if api.GetGreetingHandler == nil {
-		api.GetGreetingHandler = operations.GetGreetingHandlerFunc(func(params operations.GetGreetingParams) middleware.Responder {
-			return middleware.NotImplemented("operation operations.GetGreeting has not yet been implemented")
-		})
-	}
+	// 独自実装したハンドラを追加する
+	api.PostAPIRegisterHandler = operations.PostAPIRegisterHandlerFunc(PostAPIRegisterHandler)
+	api.GetGreetingHandler = operations.GetGreetingHandlerFunc(GetGreetingHandler)
 
 	api.PreServerShutdown = func() {}
-
 	api.ServerShutdown = func() {}
 
 	return setupGlobalMiddleware(api.Serve(setupMiddlewares))
