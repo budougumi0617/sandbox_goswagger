@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/budougumi0617/sandbox_goswagger/server"
+	"github.com/budougumi0617/sandbox_goswagger/controller"
 	"log"
 	"net"
 	"os"
@@ -28,7 +28,7 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	server := server.NewServer(l, h)
+	server := controller.NewServer(l, h)
 
 	parser := flags.NewParser(server, flags.Default)
 	parser.ShortDescription = "Sample API"
