@@ -1,7 +1,9 @@
 package main
 
 import (
+	"github.com/budougumi0617/sandbox_goswagger/server"
 	"log"
+	"net"
 	"os"
 
 	"github.com/budougumi0617/sandbox_goswagger/gen/restapi"
@@ -21,9 +23,12 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	api := operations.NewSampleAPI(swaggerSpec)
-	server := restapi.NewServer(api)
-	defer server.Shutdown()
+	h := restapi.ConfigureAPI(operations.NewSampleAPI(swaggerSpec))
+	l, err := net.Listen("http", ":80")
+	if err != nil {
+		log.Fatalln(err)
+	}
+	server := server.NewServer(l, h)
 
 	parser := flags.NewParser(server, flags.Default)
 	parser.ShortDescription = "Sample API"

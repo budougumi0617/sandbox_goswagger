@@ -33,9 +33,9 @@ func configureAPI(api *operations.SampleAPI) http.Handler {
 
 	api.JSONProducer = runtime.JSONProducer()
 
-	if api.PostAPIRegistHandler == nil {
-		api.PostAPIRegistHandler = operations.PostAPIRegistHandlerFunc(func(params operations.PostAPIRegistParams) middleware.Responder {
-			return middleware.NotImplemented("operation operations.PostAPIRegist has not yet been implemented")
+	if api.PostAPIRegisterHandler == nil {
+		api.PostAPIRegisterHandler = operations.PostAPIRegisterHandlerFunc(func(params operations.PostAPIRegisterParams) middleware.Responder {
+			return middleware.NotImplemented("operation operations.PostAPIRegister has not yet been implemented")
 		})
 	}
 	if api.GetGreetingHandler == nil {
