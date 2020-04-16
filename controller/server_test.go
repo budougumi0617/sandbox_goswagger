@@ -24,9 +24,6 @@ func TestServer_Start(t *testing.T) {
 		want resp
 	}{
 		{
-			// curl localhost:18080/hello?name=budougumi0617
-			// {"name":"budougumi0617"}
-			// curl -D - -X POST -H "Content-Type: application/json" localhost:18080/api/register?hoge_id=20 -d '{"name": "budougumi0617", "lastName":"taro"}'
 			name: "GetHello",
 			req: req{
 				method:  "GET",
@@ -41,18 +38,29 @@ func TestServer_Start(t *testing.T) {
 			},
 		},
 		{
-			// curl -D - -X POST -H "Content-Type: application/json" localhost:18080/api/register?hoge_id=20 -d '{"name": "budougumi0617", "lastName":"taro"}'
 			name: "GetHelloWithOutQuery",
 			req: req{
-				method:  "GET",
-				path:    "/hello",
-				headers: map[string]string{},
-				query:   "?name=budougumi0",
-				body:    "",
+				method: "GET",
+				path:   "/hello",
 			},
 			want: resp{
 				status: http.StatusOK,
 				body:   "{}\n",
+			},
+		},
+		{
+			name: "PostAPIRegister",
+			req: req{
+				method: "POST",
+				path:   "/api/register",
+				headers: map[string]string{
+					"Content-Type": "application/json",
+				},
+				query: "?hoge_id=20",
+				body:  `{"name": "budougumi0617", "lastName":"taro"}`,
+			},
+			want: resp{
+				status: http.StatusOK,
 			},
 		},
 	}
@@ -76,10 +84,13 @@ func TestServer_Start(t *testing.T) {
 				if err := s.Start(); err != http.ErrServerClosed {
 					t.Logf("Server.Start() faled termination: %v", err)
 				}
-				t.Logf("%q: Server.Server.Close() tamenated", tt.name)
 			}()
 			url := "http://" + l.Addr().String() + tt.req.path + tt.req.query
 			req, err := http.NewRequest(tt.req.method, url, strings.NewReader(tt.req.body))
+			for k, v := range tt.req.headers {
+				req.Header.Add(k, v)
+			}
+
 			if err != nil {
 				t.Fatalf("create request failed %v", err)
 			}
