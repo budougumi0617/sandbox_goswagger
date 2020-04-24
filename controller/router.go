@@ -4,11 +4,13 @@ package controller
 
 import (
 	"crypto/tls"
+	"log"
 	"net/http"
 
 	"github.com/budougumi0617/sandbox_goswagger/gen/restapi/operations"
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
+	"github.com/go-openapi/runtime/middleware"
 )
 
 func ConfigureAPI(api *operations.SampleAPI) http.Handler {
@@ -28,6 +30,17 @@ func ConfigureAPI(api *operations.SampleAPI) http.Handler {
 	// 独自実装したハンドラを追加する
 	api.PostAPIRegisterHandler = operations.PostAPIRegisterHandlerFunc(PostAPIRegisterHandler)
 	api.GetGreetingHandler = operations.GetGreetingHandlerFunc(GetGreetingHandler)
+
+	// 独自実装したMiddlewareを個別にセットする。
+	// pathはinitHandlerCache関数内で自動生成されているので、定数などはない。
+	mw := middleware.Builder(func(handler http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			log.Printf("in specifiedMiddleware: %v", r.URL.Path)
+			handler.ServeHTTP(w, r)
+			log.Printf("in specifiedMiddleware after: %v", r.URL.Path)
+		})
+	})
+	api.AddMiddlewareFor("POST", "/api/register", mw)
 
 	api.PreServerShutdown = func() {}
 	api.ServerShutdown = func() {}
@@ -50,11 +63,19 @@ func configureServer(s *http.Server, scheme, addr string) {
 // The middleware configuration is for the handler executors. These do not apply to the swagger.json document.
 // The middleware executes after routing but before authentication, binding and validation
 func setupMiddlewares(handler http.Handler) http.Handler {
-	return handler
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		log.Printf("in setupMiddleware: %v", r.URL.Path)
+		handler.ServeHTTP(w, r)
+		log.Printf("in setupMiddleware after: %v", r.URL.Path)
+	})
 }
 
 // The middleware configuration happens before anything, this middleware also applies to serving the swagger.json document.
 // So this is a good place to plug in a panic handling middleware, logging and metrics
 func setupGlobalMiddleware(handler http.Handler) http.Handler {
-	return handler
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		log.Printf("in setupGlobalMiddleware: %v", r.URL.Path)
+		handler.ServeHTTP(w, r)
+		log.Printf("in setupGlobalMiddleware after: %v", r.URL.Path)
+	})
 }
